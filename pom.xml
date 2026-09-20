@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>sandbox.com.ph</groupId>
+    <artifactId>admin-template</artifactId>
+    <version>1.0</version>
+    <packaging>war</packaging>
+    <name>admin-template</name>
+
+    <!-- ===================== GLOBAL PROPERTIES ===================== -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+
+        <!-- Versions -->
+        <junit.version>5.11.0</junit.version>
+        <jetty.version>12.0.38</jetty.version>
+    </properties>
+
+    <!-- ===================== DEPENDENCIES ===================== -->
+    <dependencies>
+
+        <!-- ============================================================ -->
+        <!-- LOMBOK                                                        -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- HIBERNATE (JPA Provider - Jakarta)                            -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>6.6.9.Final</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- DATABASE DRIVERS                                              -->
+        <!-- ============================================================ -->
+        <!-- MariaDB -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+
+        <!-- IBM i (AS/400) -->
+        <dependency>
+            <groupId>net.sf.jt400</groupId>
+            <artifactId>jt400</artifactId>
+            <version>10.5</version>
+        </dependency>
+
+        <!-- IBM DB2 -->
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>jcc</artifactId>
+            <version>11.5.8.0</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- PRIMEFACES (Jakarta variant)                                  -->
+        <!-- ============================================================ -->
+        <!-- Source: https://mvnrepository.com/artifact/org.primefaces/primefaces -->
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>16.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- AdminFaces Theme (AdminLTE look for PrimeFaces)              -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>com.github.adminfaces</groupId>
+            <artifactId>admin-theme</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>AdminLTE</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- JAKARTA FACES (JSF 4.0 - Mojarra Implementation)              -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.faces</artifactId>
+            <version>4.0.11</version>
+        </dependency>
+
+        <!-- Faces API (compile-time interfaces) -->
+        <dependency>
+            <groupId>jakarta.faces</groupId>
+            <artifactId>jakarta.faces-api</artifactId>
+            <version>4.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- JAKARTA PERSISTENCE                                           -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- JAKARTA EL (API + Implementation)                             -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- JAKARTA SERVLET API (Provided by Jetty 12 EE11)               -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- CDI API                                                       -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- WELD CDI for Jetty 12 (EE10)                                  -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>org.jboss.weld.servlet</groupId>
+            <artifactId>weld-servlet-core</artifactId>
+            <version>5.1.2.Final</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- APACHE COMMONS IO                                             -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.16.1</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- JASPER REPORTS                                                 -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>6.21.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>4.0.15</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- LOGGING (SLF4J + Logback)                                     -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.18</version>
+        </dependency>
+
+        <!-- ============================================================ -->
+        <!-- JUNIT 5                                                       -->
+        <!-- ============================================================ -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- ===================== BUILD ===================== -->
+    <build>
+        <finalName>admin-template</finalName>
+        <plugins>
+
+            <!-- WAR packaging -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+            </plugin>
+
+            <!-- ============================================================
+                 JETTY 12 EE11 — required for Jakarta EE 11 / Faces 4.x
+                 Run:  mvn jetty-ee11:run
+                 ============================================================ -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>11.0.26</version>
+
+                <configuration>
+                    <httpConnector>
+                        <port>8090</port>
+                    </httpConnector>
+
+                    <webApp>
+                        <contextPath>/admin-template</contextPath>
+                    </webApp>
+
+                    <!-- MIME mappings for PrimeFaces theme fonts -->
+                    <systemProperties>
+                        <systemProperty>
+                            <name>org.eclipse.jetty.servlet.Default.mimeTypes</name>
+                            <value>ttf=application/x-font-ttf,woff=application/font-woff,woff2=application/font-woff2,otf=application/x-font-otf,eot=application/vnd.ms-fontobject,svg=image/svg+xml,ico=image/x-icon</value>
+                        </systemProperty>
+                    </systemProperties>
+
+                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

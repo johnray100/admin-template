@@ -1,0 +1,1017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Template — Employees</title>
+
+    <style>
+        /* ============================================================
+           BASE RESET — 12px base font
+           ============================================================ */
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            "Helvetica Neue", Arial, sans-serif;
+            font-size: 12px;
+            background: #ecf0f5;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .wrapper { min-height: 100vh; }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .main-header {
+            background: #343a40;
+            color: #fff;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .main-header .logo {
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-right: 18px;
+            border-right: 1px solid #4b545c;
+        }
+        .main-header .logo i { color: #3b82f6; font-size: 15px; }
+        .main-header .navbar {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            gap: 18px;
+        }
+        .main-header .navbar a {
+            color: #c2c7d0;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color .15s;
+        }
+        .main-header .navbar a:hover { color: #fff; }
+        .main-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #c2c7d0;
+            font-size: 12px;
+        }
+        .main-header .user-info .avatar-sm {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1e3a8a);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        /* ============================================================
+           SIDEBAR
+           ============================================================ */
+        .main-sidebar {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            bottom: 0;
+            width: 220px;
+            background: #343a40;
+            color: #c2c7d0;
+            overflow-y: auto;
+            z-index: 900;
+        }
+        .sidebar-menu {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .sidebar-menu .menu-header {
+            padding: 12px 18px 5px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6c757d;
+            font-weight: 700;
+        }
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 18px;
+            color: #c2c7d0;
+            text-decoration: none;
+            font-size: 12px;
+            border-left: 3px solid transparent;
+            transition: all .15s;
+        }
+        .sidebar-menu li a:hover {
+            background: #494e53;
+            color: #fff;
+        }
+        .sidebar-menu li a.active {
+            background: #494e53;
+            color: #fff;
+            border-left-color: #3b82f6;
+        }
+        .sidebar-menu li a i {
+            font-size: 13px;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* ============================================================
+           CONTENT WRAPPER
+           ============================================================ */
+        .content-wrapper {
+            margin-left: 220px;
+            margin-top: 50px;
+            padding: 18px;
+            min-height: calc(100vh - 50px - 40px);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .content-header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .content-header h1 i { font-size: 16px; }
+        .content-header .breadcrumb {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        .content-header .breadcrumb span { color: #3b82f6; font-weight: 600; }
+
+        /* ============================================================
+           CARD
+           ============================================================ */
+        .card {
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1f2937;
+        }
+        .card-header i { color: #3b82f6; font-size: 13px; }
+        .card-body { padding: 14px 16px; font-size: 12px; }
+        .card-body p { margin: 6px 0; }
+
+        /* ============================================================
+           KPI CARDS
+           ============================================================ */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .kpi {
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #17a2b8;
+        }
+        .kpi.kpi-success { border-left-color: #28a745; }
+        .kpi.kpi-warning { border-left-color: #ffc107; }
+        .kpi.kpi-danger  { border-left-color: #dc3545; }
+        .kpi .kpi-label {
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .kpi .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1.1;
+            margin-top: 4px;
+        }
+        .kpi i.kpi-icon {
+            font-size: 26px;
+            opacity: 0.35;
+        }
+
+        /* ============================================================
+           FORM CONTROLS
+           ============================================================ */
+        .field-label {
+            font-weight: 600;
+            font-size: 11px;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .field-input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: border-color .15s, box-shadow .15s;
+            outline: none;
+            background: #fff;
+        }
+        .field-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 18px 0;
+        }
+
+        /* ============================================================
+           BUTTONS
+           ============================================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+        .btn i { font-size: 13px; }
+        .btn-primary   { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+        .btn-primary:hover   { background: #2563eb; border-color: #2563eb; }
+        .btn-success   { background: #28a745; color: #fff; border-color: #28a745; }
+        .btn-success:hover   { background: #1e7e34; border-color: #1e7e34; }
+        .btn-secondary { background: #fff; color: #374151; border-color: #d1d5db; }
+        .btn-secondary:hover { background: #f3f4f6; }
+        .btn-danger    { background: #dc3545; color: #fff; border-color: #dc3545; }
+        .btn-danger:hover    { background: #a71d2a; border-color: #a71d2a; }
+        .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+        /* ============================================================
+           FILTER BAR
+           ============================================================ */
+        .filter-bar {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        @media (min-width: 768px) {
+            .filter-bar {
+                grid-template-columns: 2fr 1fr 1fr auto;
+                align-items: end;
+            }
+        }
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ============================================================
+           EMPLOYEE TABLE
+           ============================================================ */
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .employee-table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .employee-table thead th {
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .employee-table tbody td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f3f5;
+            color: #374151;
+            vertical-align: middle;
+        }
+        .employee-table tbody tr:hover {
+            background: #f8fafc;
+        }
+        .employee-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1e3a8a);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 11px;
+            margin-right: 10px;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+        .avatar.avatar-success { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .avatar.avatar-warning { background: linear-gradient(135deg, #ffc107, #d39e00); color: #212529; }
+        .avatar.avatar-danger  { background: linear-gradient(135deg, #dc3545, #a71d2a); }
+        .avatar.avatar-info    { background: linear-gradient(135deg, #17a2b8, #138496); }
+
+        .emp-cell {
+            display: flex;
+            align-items: center;
+        }
+        .emp-name {
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.2;
+        }
+        .emp-email {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-top: 1px;
+        }
+
+        /* Status badge */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .status::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        .status-active   { background: #d4edda; color: #155724; }
+        .status-leave    { background: #fff3cd; color: #856404; }
+        .status-inactive { background: #f8d7da; color: #721c24; }
+
+        /* Action buttons sa table */
+        .row-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .icon-btn {
+            width: 26px; height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            background: #fff;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all .15s;
+            font-size: 11px;
+        }
+        .icon-btn:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+            border-color: #d1d5db;
+        }
+        .icon-btn.view:hover   { color: #3b82f6; border-color: #3b82f6; }
+        .icon-btn.edit:hover   { color: #28a745; border-color: #28a745; }
+        .icon-btn.delete:hover { color: #dc3545; border-color: #dc3545; }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .main-footer {
+            margin-left: 220px;
+            background: #fff;
+            border-top: 1px solid #d2d6de;
+            padding: 10px 18px;
+            font-size: 11px;
+            color: #6b7280;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .main-footer strong { color: #374151; }
+
+        /* ============================================================
+           MISC
+           ============================================================ */
+        code {
+            background: #f3f4f6;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 11px;
+            color: #374151;
+        }
+
+        /* ============================================================
+           PAGINATION (static demo)
+           ============================================================ */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 11px;
+            color: #6b7280;
+        }
+        .pagination .pages {
+            display: flex;
+            gap: 4px;
+        }
+        .page-btn {
+            min-width: 26px;
+            height: 26px;
+            padding: 0 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            background: #fff;
+            color: #374151;
+            font-size: 11px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page-btn:hover { background: #f3f4f6; }
+        .page-btn.active {
+            background: #3b82f6;
+            color: #fff;
+            border-color: #3b82f6;
+        }
+
+        /* ============================================================
+           TOOLBAR (title + add button)
+           ============================================================ */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .toolbar-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toolbar-title i { color: #3b82f6; }
+    </style>
+</h:head>
+
+<h:body>
+    <f:view>
+        <div class="wrapper">
+
+            <!-- ============================================================
+                 HEADER
+                 ============================================================ -->
+            <header class="main-header">
+                <div class="logo">
+                    <i class="pi pi-building"></i>
+                    <span>Admin Template</span>
+                </div>
+                <div class="navbar">
+                    <a href="#" title="Notifications"><i class="pi pi-bell"></i></a>
+                    <a href="#" title="Messages"><i class="pi pi-envelope"></i></a>
+                    <div class="user-info">
+                        <div class="avatar-sm">AD</div>
+                        <span>Administrator</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ============================================================
+                 SIDEBAR
+                 ============================================================ -->
+            <aside class="main-sidebar">
+                <ul class="sidebar-menu">
+                    <li class="menu-header">Main Navigation</li>
+
+                    <li>
+                        <a href="#{request.contextPath}/pages/dashboard/dashboard.xhtml">
+                            <i class="pi pi-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#{request.contextPath}/pages/attendance/attendance.xhtml">
+                            <i class="pi pi-clock"></i> Attendance
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#{request.contextPath}/pages/employee/employee.xhtml">
+                            <i class="pi pi-users"></i> Employees
+                        </a>
+                    </li>
+
+                    <li class="menu-header">Reports</li>
+
+                    <li>
+                        <a href="#{request.contextPath}/pages/report/attendance-report.xhtml">
+                            <i class="pi pi-file-pdf"></i> Attendance Report
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#{request.contextPath}/pages/analytics/analytics.xhtml">
+                            <i class="pi pi-chart-bar"></i> Analytics
+                        </a>
+                    </li>
+
+                    <li class="menu-header">System</li>
+
+                    <li>
+                        <a href="#{request.contextPath}/pages/settings/settings.xhtml">
+                            <i class="pi pi-cog"></i> Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#{request.contextPath}/pages/logout.xhtml">
+                            <i class="pi pi-sign-out"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- ============================================================
+                 MAIN CONTENT
+                 ============================================================ -->
+            <div class="content-wrapper">
+
+                <!-- Page Header -->
+                <div class="content-header">
+                    <h1>
+                        <i class="pi pi-users" style="color:#3b82f6;"></i>
+                        Employee Management
+                    </h1>
+                    <div class="breadcrumb">
+                        Home / <span>Employees</span>
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi">
+                        <div>
+                            <div class="kpi-label">Total Employees</div>
+                            <div class="kpi-value">128</div>
+                        </div>
+                        <i class="pi pi-users kpi-icon" style="color:#17a2b8;"></i>
+                    </div>
+                    <div class="kpi kpi-success">
+                        <div>
+                            <div class="kpi-label">Active</div>
+                            <div class="kpi-value">112</div>
+                        </div>
+                        <i class="pi pi-user-plus kpi-icon" style="color:#28a745;"></i>
+                    </div>
+                    <div class="kpi kpi-warning">
+                        <div>
+                            <div class="kpi-label">On Leave</div>
+                            <div class="kpi-value">10</div>
+                        </div>
+                        <i class="pi pi-calendar kpi-icon" style="color:#ffc107;"></i>
+                    </div>
+                    <div class="kpi kpi-danger">
+                        <div>
+                            <div class="kpi-label">Inactive</div>
+                            <div class="kpi-value">6</div>
+                        </div>
+                        <i class="pi pi-user-minus kpi-icon" style="color:#dc3545;"></i>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     EMPLOYEE TABLE CARD
+                     ============================================================ -->
+                <div class="card">
+
+                    <div class="card-header">
+                        <i class="pi pi-list"></i> Employee List
+                    </div>
+
+                    <div class="card-body">
+
+                        <!-- Toolbar: search + add -->
+                        <div class="toolbar">
+                            <div class="toolbar-title">
+                                <i class="pi pi-search"></i>
+                                Search &amp; Filter
+                            </div>
+                            <button type="button" class="btn btn-success">
+                                <i class="pi pi-plus"></i> Add Employee
+                            </button>
+                        </div>
+
+                        <!-- Filter Bar -->
+                        <div class="filter-bar">
+                            <div>
+                                <label class="field-label">Search</label>
+                                <input type="text"
+                                       class="field-input"
+                                       placeholder="Name, ID, or email…"/>
+                            </div>
+                            <div>
+                                <label class="field-label">Department</label>
+                                <select class="field-input">
+                                    <option>All Departments</option>
+                                    <option>IT</option>
+                                    <option>HR</option>
+                                    <option>Operations</option>
+                                    <option>Finance</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="field-label">Status</label>
+                                <select class="field-input">
+                                    <option>All Statuses</option>
+                                    <option>Active</option>
+                                    <option>On Leave</option>
+                                    <option>Inactive</option>
+                                </select>
+                            </div>
+                            <div class="filter-actions">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="pi pi-search"></i> Search
+                                </button>
+                                <button type="button" class="btn btn-secondary">
+                                    <i class="pi pi-refresh"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+
+                        <hr class="divider"/>
+
+                        <!-- Employee Table -->
+                        <table class="employee-table">
+                            <thead>
+                            <tr>
+                                <th style="width:60px;">ID</th>
+                                <th>Employee</th>
+                                <th style="width:130px;">Department</th>
+                                <th style="width:150px;">Position</th>
+                                <th style="width:130px;">Contact</th>
+                                <th style="width:110px; text-align:center;">Status</th>
+                                <th style="width:120px; text-align:center;">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <td>#001</td>
+                                <td>
+                                    <div class="emp-cell">
+                                        <span class="avatar">JD</span>
+                                        <div>
+                                            <div class="emp-name">Juan Dela Cruz</div>
+                                            <div class="emp-email">juan.delacruz@company.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>IT</td>
+                                <td>Senior Developer</td>
+                                <td>0917-123-4567</td>
+                                <td style="text-align:center;">
+                                    <span class="status status-active">Active</span>
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button type="button" class="icon-btn view" title="View">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn edit" title="Edit">
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn delete" title="Delete">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>#002</td>
+                                <td>
+                                    <div class="emp-cell">
+                                        <span class="avatar avatar-success">MS</span>
+                                        <div>
+                                            <div class="emp-name">Maria Santos</div>
+                                            <div class="emp-email">maria.santos@company.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>HR</td>
+                                <td>HR Manager</td>
+                                <td>0917-234-5678</td>
+                                <td style="text-align:center;">
+                                    <span class="status status-active">Active</span>
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button type="button" class="icon-btn view" title="View">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn edit" title="Edit">
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn delete" title="Delete">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>#003</td>
+                                <td>
+                                    <div class="emp-cell">
+                                        <span class="avatar avatar-warning">PR</span>
+                                        <div>
+                                            <div class="emp-name">Pedro Reyes</div>
+                                            <div class="emp-email">pedro.reyes@company.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Operations</td>
+                                <td>Team Lead</td>
+                                <td>0917-345-6789</td>
+                                <td style="text-align:center;">
+                                    <span class="status status-leave">On Leave</span>
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button type="button" class="icon-btn view" title="View">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn edit" title="Edit">
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn delete" title="Delete">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>#004</td>
+                                <td>
+                                    <div class="emp-cell">
+                                        <span class="avatar avatar-info">AL</span>
+                                        <div>
+                                            <div class="emp-name">Anna Lim</div>
+                                            <div class="emp-email">anna.lim@company.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Finance</td>
+                                <td>Accountant</td>
+                                <td>0917-456-7890</td>
+                                <td style="text-align:center;">
+                                    <span class="status status-active">Active</span>
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button type="button" class="icon-btn view" title="View">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn edit" title="Edit">
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn delete" title="Delete">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>#005</td>
+                                <td>
+                                    <div class="emp-cell">
+                                        <span class="avatar avatar-danger">RC</span>
+                                        <div>
+                                            <div class="emp-name">Roberto Cruz</div>
+                                            <div class="emp-email">roberto.cruz@company.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>IT</td>
+                                <td>Junior Developer</td>
+                                <td>0917-567-8901</td>
+                                <td style="text-align:center;">
+                                    <span class="status status-inactive">Inactive</span>
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button type="button" class="icon-btn view" title="View">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn edit" title="Edit">
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn delete" title="Delete">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>#006</td>
+                                <td>
+                                    <div class="emp-cell">
+                                        <span class="avatar">SG</span>
+                                        <div>
+                                            <div class="emp-name">Sofia Garcia</div>
+                                            <div class="emp-email">sofia.garcia@company.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>HR</td>
+                                <td>Recruiter</td>
+                                <td>0917-678-9012</td>
+                                <td style="text-align:center;">
+                                    <span class="status status-active">Active</span>
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button type="button" class="icon-btn view" title="View">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn edit" title="Edit">
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn delete" title="Delete">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>#007</td>
+                                <td>
+                                    <div class="emp-cell">
+                                        <span class="avatar avatar-success">MT</span>
+                                        <div>
+                                            <div class="emp-name">Miguel Torres</div>
+                                            <div class="emp-email">miguel.torres@company.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Operations</td>
+                                <td>Supervisor</td>
+                                <td>0917-789-0123</td>
+                                <td style="text-align:center;">
+                                    <span class="status status-active">Active</span>
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button type="button" class="icon-btn view" title="View">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn edit" title="Edit">
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn delete" title="Delete">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>#008</td>
+                                <td>
+                                    <div class="emp-cell">
+                                        <span class="avatar avatar-warning">LV</span>
+                                        <div>
+                                            <div class="emp-name">Lisa Villanueva</div>
+                                            <div class="emp-email">lisa.villanueva@company.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Finance</td>
+                                <td>Payroll Officer</td>
+                                <td>0917-890-1234</td>
+                                <td style="text-align:center;">
+                                    <span class="status status-leave">On Leave</span>
+                                </td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button type="button" class="icon-btn view" title="View">
+                                            <i class="pi pi-eye"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn edit" title="Edit">
+                                            <i class="pi pi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="icon-btn delete" title="Delete">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                        <!-- Pagination -->
+                        <div class="pagination">
+                            <div>Showing <strong>1</strong>–<strong>8</strong> of <strong>128</strong> employees</div>
+                            <div class="pages">
+                                <button type="button" class="page-btn">‹</button>
+                                <button type="button" class="page-btn active">1</button>
+                                <button type="button" class="page-btn">2</button>
+                                <button type="button" class="page-btn">3</button>
+                                <button type="button" class="page-btn">…</button>
+                                <button type="button" class="page-btn">16</button>
+                                <button type="button" class="page-btn">›</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ============================================================
+                 FOOTER
+                 ============================================================ -->
+            <footer class="main-footer">
+                <div>
+                    <strong>© 2026 Admin Template.</strong> All rights reserved.
+                </div>
+                <div>
+                    <strong>Version:</strong> 1.0.0
+                </div>
+            </footer>
+
+        </div>
+    </f:view>
+</h:body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Attendance Log Book</title>
+
+    <style>
+        /* =========================================================
+           BASE / RESET
+           ========================================================= */
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #343a40;
+            margin: 0;
+            padding: 0;
+        }
+        .content-wrapper {
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* =========================================================
+           PAGE HEADER
+           ========================================================= */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .page-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .page-header .breadcrumb {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .page-header .breadcrumb span { color: #3b82f6; font-weight: 600; }
+
+        /* =========================================================
+           STAT CARDS (AdminLTE "small-box")
+           ========================================================= */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .small-box {
+            position: relative;
+            border-radius: 8px;
+            padding: 20px;
+            color: #fff;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            min-height: 130px;
+            transition: transform .2s ease;
+        }
+        .small-box:hover { transform: translateY(-3px); }
+        .small-box .inner h3 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            line-height: 1;
+        }
+        .small-box .inner p {
+            font-size: 0.95rem;
+            margin: 0;
+            opacity: 0.95;
+        }
+        .small-box .icon {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 4rem;
+            opacity: 0.25;
+        }
+        .small-box .small-box-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 7px 14px;
+            background: rgba(0,0,0,0.12);
+            color: rgba(255,255,255,0.9);
+            font-size: 0.8rem;
+            text-align: right;
+        }
+        .bg-info    { background: linear-gradient(135deg, #17a2b8, #138496); }
+        .bg-success { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .bg-warning { background: linear-gradient(135deg, #ffc107, #d39e00); color: #212529; }
+        .bg-warning .small-box-footer { color: #212529; }
+        .bg-danger  { background: linear-gradient(135deg, #dc3545, #a71d2a); }
+
+        /* =========================================================
+           CARD (White panel)
+           ========================================================= */
+        .card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #1f2937;
+            background: #ffffff;
+        }
+        .card-header i { color: #3b82f6; }
+        .card-body { padding: 20px; }
+        .card-body.no-pad { padding: 0; }
+
+        /* =========================================================
+           MAIN LAYOUT (2-column)
+           ========================================================= */
+        .layout-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 992px) {
+            .layout-row { grid-template-columns: 4fr 8fr; }
+        }
+
+        /* =========================================================
+           QUICK ACTION BUTTONS
+           ========================================================= */
+        .quick-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 22px 18px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: transform .15s ease, box-shadow .15s ease;
+            letter-spacing: 0.3px;
+        }
+        .quick-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+        }
+        .quick-action i { font-size: 1.4rem; }
+        .qa-in  { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .qa-out { background: linear-gradient(135deg, #dc3545, #a71d2a); }
+
+        /* =========================================================
+           FORM CONTROLS (PrimeFaces overrides)
+           ========================================================= */
+        .field-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #374151;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .ui-inputfield {
+            border-radius: 6px !important;
+            border: 1px solid #d1d5db !important;
+            padding: 10px 12px !important;
+            width: 100% !important;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .ui-inputfield:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
+            outline: none !important;
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 22px 0;
+        }
+
+        /* =========================================================
+           DATATABLE TWEAKS
+           ========================================================= */
+        .ui-datatable thead th {
+            background-color: #f8f9fa !important;
+            color: #495057 !important;
+            font-weight: 600;
+            border-color: #dee2e6 !important;
+            padding: 12px 14px !important;
+        }
+        .ui-datatable tbody td {
+            padding: 12px 14px !important;
+            border-color: #f1f3f5 !important;
+        }
+        .ui-datatable tbody tr:hover {
+            background-color: #f8fafc !important;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .badge-in  { background: #d4edda; color: #155724; }
+        .badge-out { background: #f8d7da; color: #721c24; }
+
+        /* Avatar circle */
+        .avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #0b1220;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .emp-cell { display: flex; align-items: center; }
+
+        /* Clock display in header */
+        .live-clock {
+            font-size: 0.9rem;
+            color: #374151;
+            background: #f3f4f6;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="content-wrapper">
+
+        <!-- =========================================================
+             PAGE HEADER
+             ========================================================= -->
+        <div class="page-header">
+            <h2>
+                <i class="pi pi-building" style="color:#3b82f6;"></i>
+                Attendance Log Book
+            </h2>
+            <div class="breadcrumb">
+                Home / <span>Attendance</span>
+            </div>
+        </div>
+
+        <h:form id="attendanceForm">
+
+            <!-- =========================================================
+                 STAT CARDS ROW
+                 ========================================================= -->
+            <div class="stat-row">
+
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>128</h3>
+                        <p>Total Employees</p>
+                    </div>
+                    <i class="pi pi-users icon"></i>
+                    <div class="small-box-footer">Registered in system</div>
+                </div>
+
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>42</h3>
+                        <p>Currently Inside</p>
+                    </div>
+                    <i class="pi pi-sign-in icon"></i>
+                    <div class="small-box-footer">Active in building</div>
+                </div>
+
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>6</h3>
+                        <p>Late Today</p>
+                    </div>
+                    <i class="pi pi-clock icon"></i>
+                    <div class="small-box-footer">After 8:00 AM</div>
+                </div>
+
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>9</h3>
+                        <p>Absent Today</p>
+                    </div>
+                    <i class="pi pi-user-minus icon"></i>
+                    <div class="small-box-footer">No time-in record</div>
+                </div>
+
+            </div>
+
+            <!-- =========================================================
+                 MAIN LAYOUT: Quick Actions | Today's Log
+                 ========================================================= -->
+            <div class="layout-row">
+
+                <!-- ============ LEFT: QUICK ACTIONS ============ -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="pi pi-bolt"></i> Quick Actions
+                        <span class="live-clock" style="margin-left:auto;">
+                            <i class="pi pi-clock"></i> 09:42 AM
+                        </span>
+                    </div>
+                    <div class="card-body">
+
+                        <label class="field-label" for="empId">
+                            Employee ID / Badge No.
+                        </label>
+                        <p:inputText id="empId"
+                                     placeholder="Scan or type ID…"
+                                     style="margin-bottom:18px;"/>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <p:commandButton value="Time In"
+                                             icon="pi pi-sign-in"
+                                             styleClass="quick-action qa-in"/>
+                            <p:commandButton value="Time Out"
+                                             icon="pi pi-sign-out"
+                                             styleClass="quick-action qa-out"/>
+                        </div>
+
+                        <hr class="divider"/>
+
+                        <label class="field-label" for="remarks">
+                            Remarks (optional)
+                        </label>
+                        <p:inputTextarea id="remarks"
+                                         rows="3"
+                                         placeholder="e.g. Field work, half-day, etc."/>
+                    </div>
+                </div>
+
+                <!-- ============ RIGHT: TODAY'S LOG ============ -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="pi pi-list"></i> Today's Movement Log
+                        <span style="margin-left:auto; font-weight:400; font-size:0.85rem; color:#6b7280;">
+                            Monday, Sep 20 2026
+                        </span>
+                    </div>
+                    <div class="card-body no-pad">
+
+                        <p:dataTable var="log"
+                                     value="#{attendanceBean.todayLogs}"
+                                     paginator="true"
+                                     rows="8"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     currentPageReportTemplate="Showing {startRecord}-{endRecord} of {totalRecords}"
+                                     emptyMessage="No entries yet for today."
+                                     style="border:none;">
+
+                            <p:column headerText="Time" style="width:110px;">
+                                <i class="pi pi-clock" style="color:#9ca3af; margin-right:6px;"></i>
+                                08:12 AM
+                            </p:column>
+
+                            <p:column headerText="Employee" style="width:230px;">
+                                <div class="emp-cell">
+                                    <span class="avatar">JD</span>
+                                    <div>
+                                        <div style="font-weight:600; color:#1f2937;">Juan Dela Cruz</div>
+                                        <div style="font-size:0.78rem; color:#9ca3af;">EMP-001</div>
+                                    </div>
+                                </div>
+                            </p:column>
+
+                            <p:column headerText="Department" style="width:130px;">
+                                IT
+                            </p:column>
+
+                            <p:column headerText="Action" style="width:110px; text-align:center;">
+                                <span class="badge badge-in">
+                                    <i class="pi pi-sign-in"></i> IN
+                                </span>
+                            </p:column>
+
+                            <p:column headerText="Remarks">
+                                On time
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </div>
+                </div>
+
+            </div>
+        </h:form>
+    </div>
+</h:body>
+</html>
